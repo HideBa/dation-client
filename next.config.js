@@ -1,3 +1,5 @@
+// const withTM = require('next-transpile-modules')(['react-firebaseui']);
+
 module.exports = (mode) => ({
   reactStrictMode: true,
   env: {

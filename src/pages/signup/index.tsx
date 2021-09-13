@@ -1,9 +1,4 @@
-import { auth, uiConfig } from '@dation/auth';
-import React from 'react';
-import { StyledFirebaseAuth } from 'react-firebaseui';
+import { default as SignupComponent } from '@dation/components/Auth/Signup';
 
-const Signup: React.FC = () => (
-  <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
-);
-
+const Signup: React.FC = () => <SignupComponent />;
 export default Signup;

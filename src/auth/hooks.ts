@@ -1,50 +1,55 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { currentUser } from '@dation/localState/recoil/atom';
-import { onAuthStateChanged } from 'firebase/auth';
-// import { useRouter } from 'next/router';
+import { currentUser, loading } from '@dation/localState/recoil/atom';
+import {
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { auth } from './firebase';
 
 export default () => {
-  // const router = useRouter();
+  const router = useRouter();
   const [userState, setUserState] = useRecoilState(currentUser);
-  // const [loadingState, setLoadingState] = useRecoilState(loading);
+  const [loadingState, setLoadingState] = useRecoilState(loading);
 
-  // const signUp = async (email: string, password: string) => {
-  //   console.log(email, password);
-  //   setLoadingState(true);
-  //   try {
-  //     await auth.createUserWithEmailAndPassword(email, password);
-  //     router.push(`/`);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  //   setLoadingState(false);
-  // };
+  const signUp = async (email: string, password: string) => {
+    console.log(email, password);
+    setLoadingState(true);
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      router.push(`/`);
+    } catch (err) {
+      console.error(err);
+    }
+    setLoadingState(false);
+  };
 
-  // const logIn = async (email: string, password: string) => {
-  //   setLoadingState(true);
-  //   try {
-  //     await auth.signInWithEmailAndPassword(email, password);
-  //     router.push(`/`);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  //   setLoadingState(false);
-  // };
+  const logIn = async (email: string, password: string) => {
+    setLoadingState(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      router.push(`/`);
+    } catch (err) {
+      console.error(err);
+    }
+    setLoadingState(false);
+  };
 
-  // const logout = async () => {
-  //   setLoadingState(true);
-  //   try {
-  //     auth.signOut();
-  //     router.push(`/login`);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  //   setLoadingState(false);
-  // };
+  const logout = async () => {
+    setLoadingState(true);
+    try {
+      signOut(auth);
+      router.push(`/login`);
+    } catch (err) {
+      console.error(err);
+    }
+    setLoadingState(false);
+  };
 
   // const resetPassword = async (email: string) => {
   //   if (!process.env.APP_URL) return;
@@ -99,11 +104,18 @@ export default () => {
     });
   }, [setUserState]);
 
+  // useEffect(() => {
+  //   if (userState) {
+  //     router.push(`/`);
+  //   }
+  //   router.push(`/login`);
+  // }, [router, userState]);
+
   return {
-    // isLoading: loadingState,
-    // logIn,
-    // signUp,
-    // logout,
+    isLoading: loadingState,
+    logIn,
+    signUp,
+    logout,
     currentUser: userState,
     // resetPassword,
     // updateEmail,

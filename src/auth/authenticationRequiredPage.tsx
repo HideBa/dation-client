@@ -11,7 +11,7 @@ const AuthenticationRequiredPage: React.FC<Props> = ({ children }) => {
   const user = useRecoilValue(currentUser);
   const router = useRouter();
   useEffect(() => {
-    router.push(`/login`);
+    router.push(`/signup`);
   }, [router]);
   return user ? children : null;
 };
