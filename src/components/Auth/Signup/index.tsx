@@ -7,11 +7,13 @@ import { Form, Formik, FormikHelpers } from 'formik';
 
 import { useAuth } from '@dation/auth';
 import { Box } from '@chakra-ui/react';
+import Icon from '@dation/components/Basic/Icon';
+import Flex from '@dation/components/Basic/Flex';
+import Link from 'next/link';
 import useValidate from '../use-validate';
 
 export type Props = {
   className?: string;
-  // onSend?: (email: string, password: string) => void;
 };
 
 type AuthValues = {
@@ -20,14 +22,14 @@ type AuthValues = {
   passwordConfirmation: string;
 };
 
-const Signup: React.FC<Props> = ({ className }) => {
+const Signup: React.FC<Props> = () => {
   const initialValues: AuthValues = {
     email: ``,
     password: ``,
     passwordConfirmation: ``,
   };
 
-  const { signUp } = useAuth();
+  const { signUp, googleSignUp } = useAuth();
 
   const handleSubmitForm = (
     values: AuthValues,
@@ -39,10 +41,15 @@ const Signup: React.FC<Props> = ({ className }) => {
   };
   const { signUpErrorMessagesSchema } = useValidate();
   return (
-    <div className={className}>
-      <Text fontSize="lg" color="red">
-        Sign up
-      </Text>
+    <Box
+      maxW="500px"
+      border="solid 1px lightGray"
+      p="5"
+      borderRadius="5px"
+      margin="auto"
+      h="100%"
+    >
+      <Text fontSize="3xl">Sign up</Text>
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmitForm}
@@ -101,7 +108,30 @@ const Signup: React.FC<Props> = ({ className }) => {
           </Form>
         )}
       </Formik>
-    </div>
+      <Box
+        m={4}
+        border="solid 1px lightGray"
+        p={2}
+        borderRadius={5}
+        cursor="pointer"
+        _hover={{ background: `lightGray` }}
+        onClick={googleSignUp}
+      >
+        <Flex align="center">
+          <Icon icon="google" size={40} />
+          <Box ml={4}>
+            <Text fontSize="m" color="gray">
+              Signup with Google
+            </Text>
+          </Box>
+        </Flex>
+      </Box>
+      <Text fontSize="m" color="blue">
+        <Link href="/login">
+          <a>Already have an account?</a>
+        </Link>
+      </Text>
+    </Box>
   );
 };
 

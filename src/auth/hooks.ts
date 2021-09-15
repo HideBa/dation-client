@@ -1,55 +1,89 @@
+/* eslint-disable no-console */
 /* eslint-disable import/no-anonymous-default-export */
-import { currentUser, loading } from '@dation/localState/recoil/atom';
+import { useCurrentUser, useLoading } from '@dation/state/jotai';
+import { FirebaseError } from 'firebase/app';
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from 'firebase/auth';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-
-import { auth } from './firebase';
+import { useCallback } from 'react';
+import { googleProvider, auth } from './firebase';
 
 export default () => {
   const router = useRouter();
-  const [userState, setUserState] = useRecoilState(currentUser);
-  const [loadingState, setLoadingState] = useRecoilState(loading);
+  const [userState, setUserState] = useCurrentUser();
+  const [loadingState, setLoadingState] = useLoading();
 
-  const signUp = async (email: string, password: string) => {
-    console.log(email, password);
+  const signUp = useCallback(
+    async (email: string, password: string) => {
+      setLoadingState(true);
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        router.push(`/`);
+      } catch (err) {
+        console.error(err);
+      }
+      setLoadingState(false);
+    },
+    [router, setLoadingState],
+  );
+
+  const googleSignUp = useCallback(async () => {
     setLoadingState(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const result = await signInWithPopup(auth, googleProvider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential?.accessToken;
+      const { user } = result;
+      console.log(token, user);
       router.push(`/`);
     } catch (err) {
-      console.error(err);
+      if (err instanceof FirebaseError) {
+        const errCode = err.code;
+        const errMessage = err.message;
+        // const { email } = err;
+        // const credential = GoogleAuthProvider.credentialFromError(err);
+        console.error(`ERR: ${errCode}`);
+        console.error(`ERR: ${errMessage}`);
+      }
+    } finally {
+      setLoadingState(false);
     }
-    setLoadingState(false);
-  };
+  }, [router, setLoadingState]);
 
-  const logIn = async (email: string, password: string) => {
-    setLoadingState(true);
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push(`/`);
-    } catch (err) {
-      console.error(err);
-    }
-    setLoadingState(false);
-  };
+  const logIn = useCallback(
+    async (email: string, password: string) => {
+      setLoadingState(true);
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        router.push(`/`);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingState(false);
+      }
+    },
+    [router, setLoadingState],
+  );
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     setLoadingState(true);
     try {
       signOut(auth);
       router.push(`/login`);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoadingState(false);
     }
-    setLoadingState(false);
-  };
+  }, [router, setLoadingState]);
+
+  const isLoggedIn = !!auth.currentUser;
 
   // const resetPassword = async (email: string) => {
   //   if (!process.env.APP_URL) return;
@@ -98,23 +132,16 @@ export default () => {
   //   setLoadingState(false);
   // };
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setUserState(user);
-    });
-  }, [setUserState]);
-
-  // useEffect(() => {
-  //   if (userState) {
-  //     router.push(`/`);
-  //   }
-  //   router.push(`/login`);
-  // }, [router, userState]);
+  onAuthStateChanged(auth, (user) => {
+    setUserState(user);
+  });
 
   return {
     isLoading: loadingState,
     logIn,
     signUp,
+    isLoggedIn,
+    googleSignUp,
     logout,
     currentUser: userState,
     // resetPassword,

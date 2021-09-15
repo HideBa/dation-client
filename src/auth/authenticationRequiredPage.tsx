@@ -1,19 +1,14 @@
-import { currentUser } from '@dation/localState/recoil/atom';
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useCurrentUser, useLoading } from '@dation/state/jotai';
+import Loading from '@dation/components/Basic/Loading';
 
 export type Props = {
   children: React.ReactElement<any, any>;
 };
 
 const AuthenticationRequiredPage: React.FC<Props> = ({ children }) => {
-  const user = useRecoilValue(currentUser);
-  const router = useRouter();
-  useEffect(() => {
-    router.push(`/signup`);
-  }, [router]);
-  return user ? children : null;
+  const [user] = useCurrentUser();
+  const [loading] = useLoading();
+  return loading ? <Loading size="lg" /> : user ? children : null;
 };
 
 export default AuthenticationRequiredPage;

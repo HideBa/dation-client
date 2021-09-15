@@ -1,8 +1,12 @@
+import { Box } from '@chakra-ui/react';
 import { useAuth } from '@dation/auth';
 import Button from '@dation/components/Basic/Button';
+import Flex from '@dation/components/Basic/Flex';
+import Icon from '@dation/components/Basic/Icon';
 import Input from '@dation/components/Basic/Input';
 import Text from '@dation/components/Basic/Text';
 import { Form, Formik, FormikHelpers } from 'formik';
+import Link from 'next/link';
 import React from 'react';
 import useValidate from '../use-validate';
 
@@ -15,7 +19,7 @@ type AuthValues = {
   password: string;
 };
 
-const Login: React.FC<Props> = ({ className }) => {
+const Login: React.FC<Props> = () => {
   const initialValues: AuthValues = { email: ``, password: `` };
   const { logIn } = useAuth();
   const handleSubmitForm = (
@@ -29,10 +33,15 @@ const Login: React.FC<Props> = ({ className }) => {
   const { logInErrorMessagesSchema } = useValidate();
 
   return (
-    <div className={className}>
-      <Text fontSize="lg" color="red">
-        Login
-      </Text>
+    <Box
+      maxW="500px"
+      border="solid 1px lightGray"
+      p="5"
+      borderRadius="5px"
+      margin="auto"
+      h="100%"
+    >
+      <Text fontSize="3xl">Log in</Text>
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmitForm}
@@ -43,34 +52,62 @@ const Login: React.FC<Props> = ({ className }) => {
           errors,
           touched,
           handleChange,
-          handleBlur,
           handleSubmit,
           isSubmitting,
+          handleBlur,
         }) => (
           <Form onSubmit={handleSubmit}>
-            <Input
-              type="email"
-              placeHolder="diary@example.com"
-              onChange={handleChange}
-              value={values.email}
-              id="email"
-              onBlur={handleBlur}
-              error={touched.email ? errors.email : ``}
-            />
-            <Input
-              type="password"
-              placeHolder="password"
-              onChange={handleChange}
-              value={values.password}
-              id="password"
-              onBlur={handleBlur}
-              error={touched.password ? errors.password : ``}
-            />
-            <Button type="submit" disabled={isSubmitting} text="send" />
+            <Box m={4}>
+              <Input
+                type="email"
+                placeHolder="diary@example.com"
+                onChange={handleChange}
+                value={values.email}
+                id="email"
+                onBlur={handleBlur}
+                error={touched.email ? errors.email : ``}
+              />
+            </Box>
+            <Box m={4}>
+              <Input
+                type="password"
+                placeHolder="password"
+                onChange={handleChange}
+                value={values.password}
+                id="password"
+                onBlur={handleBlur}
+                error={touched.password ? errors.password : ``}
+              />
+            </Box>
+            <Box m={4}>
+              <Button type="submit" disabled={isSubmitting} text="send" />
+            </Box>
           </Form>
         )}
       </Formik>
-    </div>
+      <Box
+        m={4}
+        border="solid 1px lightGray"
+        p={2}
+        borderRadius={5}
+        cursor="pointer"
+        _hover={{ background: `lightGray` }}
+      >
+        <Flex align="center">
+          <Icon icon="google" size={40} />
+          <Box ml={4}>
+            <Text fontSize="m" color="gray">
+              Login with Google
+            </Text>
+          </Box>
+        </Flex>
+      </Box>
+      <Text fontSize="m" color="blue">
+        <Link href="/signup">
+          <a>Don&apos;t have account?</a>
+        </Link>
+      </Text>
+    </Box>
   );
 };
 
