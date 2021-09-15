@@ -11,13 +11,14 @@ import {
   GoogleAuthProvider,
 } from 'firebase/auth';
 import { useRouter } from 'next/router';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { googleProvider, auth } from './firebase';
 
 export default () => {
   const router = useRouter();
   const [userState, setUserState] = useCurrentUser();
   const [loadingState, setLoadingState] = useLoading();
+  const [error, setError] = useState<FirebaseError>();
 
   const signUp = useCallback(
     async (email: string, password: string) => {
@@ -26,6 +27,9 @@ export default () => {
         await createUserWithEmailAndPassword(auth, email, password);
         router.push(`/`);
       } catch (err) {
+        if (err instanceof FirebaseError) {
+          setError(err);
+        }
         console.error(err);
       }
       setLoadingState(false);
@@ -50,6 +54,7 @@ export default () => {
         // const credential = GoogleAuthProvider.credentialFromError(err);
         console.error(`ERR: ${errCode}`);
         console.error(`ERR: ${errMessage}`);
+        setError(err);
       }
     } finally {
       setLoadingState(false);
@@ -63,6 +68,9 @@ export default () => {
         await signInWithEmailAndPassword(auth, email, password);
         router.push(`/`);
       } catch (err) {
+        if (err instanceof FirebaseError) {
+          setError(err);
+        }
         console.error(err);
       } finally {
         setLoadingState(false);
@@ -77,6 +85,9 @@ export default () => {
       signOut(auth);
       router.push(`/login`);
     } catch (err) {
+      if (err instanceof FirebaseError) {
+        setError(err);
+      }
       console.error(err);
     } finally {
       setLoadingState(false);
@@ -144,6 +155,7 @@ export default () => {
     googleSignUp,
     logout,
     currentUser: userState,
+    error,
     // resetPassword,
     // updateEmail,
     // updatePassowrd,

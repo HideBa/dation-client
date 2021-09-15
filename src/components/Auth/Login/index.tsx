@@ -21,7 +21,7 @@ type AuthValues = {
 
 const Login: React.FC<Props> = () => {
   const initialValues: AuthValues = { email: ``, password: `` };
-  const { logIn } = useAuth();
+  const { logIn, googleSignUp } = useAuth();
   const handleSubmitForm = (
     values: AuthValues,
     { setSubmitting }: FormikHelpers<AuthValues>,
@@ -95,7 +95,7 @@ const Login: React.FC<Props> = () => {
       >
         <Flex align="center">
           <Icon icon="google" size={40} />
-          <Box ml={4}>
+          <Box ml={4} onClick={googleSignUp}>
             <Text fontSize="m" color="gray">
               Login with Google
             </Text>
