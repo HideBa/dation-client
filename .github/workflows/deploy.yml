@@ -3,7 +3,7 @@ name: production deploy
 on:
   push:
     branches:
-      - master
+      - main
 
 env:
   # SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
