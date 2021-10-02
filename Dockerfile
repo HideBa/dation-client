@@ -16,6 +16,8 @@ RUN yarn build
 # Production image, copy all the files and run next
 FROM node:14-alpine AS runner
 WORKDIR /app
+ARG PORT=3000
+ENV PORT=$PORT
 
 ENV NODE_ENV production
 
@@ -33,4 +35,4 @@ USER nextjs
 
 EXPOSE 3000
 
-CMD ["yarn", "start"]
+CMD ["sh", "-c", "yarn start -p ${PORT}"]
