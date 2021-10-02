@@ -3,12 +3,12 @@ import firebase from 'firebase/compat/app';
 import { initializeApp } from 'firebase/app';
 
 export const config = {
-  apiKey: process.env.FIREBASE_KEY,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  databaseURL: process.env.FIREBASE_DATABASE_URL,
-  authDomain: process.env.FIREBASE_DOMAIN,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_KEY,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_DOMAIN,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
 };
 
 const firebaseApp = initializeApp(config);
