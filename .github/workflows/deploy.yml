@@ -47,9 +47,9 @@ jobs:
       - name: deploy to cloud run
         run: |
           gcloud run deploy dation-client \
-            --image ${{IMAGE }} \
-            --project ${{GCP_PROJECT_ID }} \
-            --port {{$PORT }} \
-            --region ${{GCP_REGION }} \
+            --image ${{ env.IMAGE }} \
+            --project ${{ env.GCP_PROJECT_ID }} \
+            --port ${{ env.PORT }} \
+            --region ${{ env.GCP_REGION }} \
             --platform managed \
             --quiet
