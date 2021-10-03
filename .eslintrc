@@ -1,4 +1,5 @@
 {
+  "root": true,
   "env": {
     "browser": true,
     "es6": true
@@ -15,7 +16,7 @@
     "SharedArrayBuffer": "readonly"
   },
   "plugins": ["import", "jsx-a11y", "react", "react-hooks", "prettier"],
-  "extends": ["airbnb", "prettier", "next", "next/core-web-vitals"],
+  // "extends": ["airbnb", "prettier", "next", "next/core-web-vitals"],
   "rules": {
     "prettier/prettier": "error",
     "camelcase": "off",

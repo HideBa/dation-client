@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-yarn-
       - run: yarn install --frozen-lockfile
       - name: Check
-        run: yarn check
+        run: yarn check-all
       # - name: Deploy
       #   uses: google-github-actions/setup-gcloud@master
       #   with:
