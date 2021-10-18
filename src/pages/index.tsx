@@ -2,9 +2,11 @@ import React from 'react';
 import Link from 'next/link';
 import AuthenticationRequiredPage from '@dation/auth/authenticationRequiredPage';
 import { useAuth } from '@dation/auth';
+import useHooks from '@dation/container/Home';
 
 const Home: React.FC = () => {
   const { logout } = useAuth();
+  useHooks();
   return (
     <AuthenticationRequiredPage>
       <div>
